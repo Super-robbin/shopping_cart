@@ -66,19 +66,26 @@ function App() {
     });
   }
 
+  // We create ctxValue, which will be our context value, that has both the items array and the function to add items.
+  const ctxValue = {
+    items: shoppingCart.items,
+    addItemToCart: handleAddItemToCart,
+  };
+
   return (
     // We now replace the fragment with the context component. To be precise, we're going to access a property
     // on this context object that was created by React, that's called Provider and that will be the actual component that we will use.
 
     // IMPORTANT: Even though we're setting a default value here in the App, you also must add a value prop
     // to your cart context provider component. And here I'll set the value prop to an object that also has such an empty items array.
-    // So we do need to set that value prop and also provide our context value here.
-    <CartContext.Provider value={{ items: [] }}>
+    // So we do need to set that value prop and also provide our context value here value={{ items: [] }}.
+    // UPDATE: To link context with state, we replace value={{ items: [] }} with the state shoppingCart.
+    // UPDATE 2: We created the context object above and we pass it as context value below.
+    <CartContext.Provider value={ctxValue}>
       <Header
         cart={shoppingCart}
         onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
       />
-
       {/* 
       We moved the code below from the Shop component, therefore we use it as a wrapper now and no longer with self-closing tag.
       We deleted onAddItemToCart={handleAddItemToCart} from the shop component below and inside the component we just pass {children},

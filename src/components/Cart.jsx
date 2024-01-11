@@ -11,7 +11,7 @@ import { CartContext } from "../store/shopping-cart-context";
 // And here I'll set the value prop to an object that also has such an empty items array.
 // So we do need to set that value prop and also provide our context value here.
 
-export default function Cart({ items, onUpdateItemQuantity }) {
+export default function Cart({ onUpdateItemQuantity }) {
   const cartCtx = useContext(CartContext);
 
   const totalPrice = cartCtx.items.reduce(
