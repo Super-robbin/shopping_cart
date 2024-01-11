@@ -3,6 +3,7 @@ import Product from "./components/Product.jsx";
 import Header from "./components/Header.jsx";
 import Shop from "./components/Shop.jsx";
 import { DUMMY_PRODUCTS } from "./dummy-products.js";
+import { CartContext } from "./store/shopping-cart-context.jsx";
 
 function App() {
   const [shoppingCart, setShoppingCart] = useState({
@@ -66,7 +67,13 @@ function App() {
   }
 
   return (
-    <>
+    // We now replace the fragment with the context component. To be precise, we're going to access a property
+    // on this context object that was created by React, that's called Provider and that will be the actual component that we will use.
+
+    // IMPORTANT: Even though we're setting a default value here in the App, you also must add a value prop
+    // to your cart context provider component. And here I'll set the value prop to an object that also has such an empty items array.
+    // So we do need to set that value prop and also provide our context value here.
+    <CartContext.Provider value={{ items: [] }}>
       <Header
         cart={shoppingCart}
         onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
@@ -85,7 +92,7 @@ function App() {
           </li>
         ))}
       </Shop>
-    </>
+    </CartContext.Provider>
   );
 }
 
