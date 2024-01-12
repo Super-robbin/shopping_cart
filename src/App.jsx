@@ -1,78 +1,10 @@
-import { useState } from "react";
 import Product from "./components/Product.jsx";
 import Header from "./components/Header.jsx";
 import Shop from "./components/Shop.jsx";
 import { DUMMY_PRODUCTS } from "./dummy-products.js";
-import { CartContext } from "./store/shopping-cart-context.jsx";
+import CartContextProvider from "./store/shopping-cart-context.jsx";
 
 function App() {
-  const [shoppingCart, setShoppingCart] = useState({
-    items: [],
-  });
-
-  function handleAddItemToCart(id) {
-    setShoppingCart((prevShoppingCart) => {
-      const updatedItems = [...prevShoppingCart.items];
-
-      const existingCartItemIndex = updatedItems.findIndex(
-        (cartItem) => cartItem.id === id
-      );
-      const existingCartItem = updatedItems[existingCartItemIndex];
-
-      if (existingCartItem) {
-        const updatedItem = {
-          ...existingCartItem,
-          quantity: existingCartItem.quantity + 1,
-        };
-        updatedItems[existingCartItemIndex] = updatedItem;
-      } else {
-        const product = DUMMY_PRODUCTS.find((product) => product.id === id);
-        updatedItems.push({
-          id: id,
-          name: product.title,
-          price: product.price,
-          quantity: 1,
-        });
-      }
-
-      return {
-        items: updatedItems,
-      };
-    });
-  }
-
-  function handleUpdateCartItemQuantity(productId, amount) {
-    setShoppingCart((prevShoppingCart) => {
-      const updatedItems = [...prevShoppingCart.items];
-      const updatedItemIndex = updatedItems.findIndex(
-        (item) => item.id === productId
-      );
-
-      const updatedItem = {
-        ...updatedItems[updatedItemIndex],
-      };
-
-      updatedItem.quantity += amount;
-
-      if (updatedItem.quantity <= 0) {
-        updatedItems.splice(updatedItemIndex, 1);
-      } else {
-        updatedItems[updatedItemIndex] = updatedItem;
-      }
-
-      return {
-        items: updatedItems,
-      };
-    });
-  }
-
-  // We create ctxValue, which will be our context value, that has both the items array and the function to add items.
-  const ctxValue = {
-    items: shoppingCart.items,
-    addItemToCart: handleAddItemToCart,
-    updateItemQuantity: handleUpdateCartItemQuantity
-  };
-
   return (
     // We now replace the fragment with the context component. To be precise, we're going to access a property
     // on this context object that was created by React, that's called Provider and that will be the actual component that we will use.
@@ -82,23 +14,24 @@ function App() {
     // So we do need to set that value prop and also provide our context value here value={{ items: [] }}.
     // UPDATE: To link context with state, we replace value={{ items: [] }} with the state shoppingCart.
     // UPDATE 2: We created the context object above and we pass it as context value below.
-    <CartContext.Provider value={ctxValue}>
-      <Header
-      />
+    // UPDATE 3: We moved the entire code with funcions inside the shopping-cart-context.jsx, where we created the custom component
+    // used below CartContextProvider. Check shopping-cart-context.jsx for reference.
+    <CartContextProvider>
+      <Header />
       {/* 
       We moved the code below from the Shop component, therefore we use it as a wrapper now and no longer with self-closing tag.
       We deleted onAddItemToCart={handleAddItemToCart} from the shop component below and inside the component we just pass {children},
       so that we can use it as a wrapper.
       We are therefore embracing COMPONENT COMPOSITION
       */}
-      <Shop onAddItemToCart={handleAddItemToCart}>
+      <Shop>
         {DUMMY_PRODUCTS.map((product) => (
           <li key={product.id}>
             <Product {...product} />
           </li>
         ))}
       </Shop>
-    </CartContext.Provider>
+    </CartContextProvider>
   );
 }
 
