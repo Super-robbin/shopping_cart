@@ -70,6 +70,7 @@ function App() {
   const ctxValue = {
     items: shoppingCart.items,
     addItemToCart: handleAddItemToCart,
+    updateItemQuantity: handleUpdateCartItemQuantity
   };
 
   return (
@@ -83,8 +84,6 @@ function App() {
     // UPDATE 2: We created the context object above and we pass it as context value below.
     <CartContext.Provider value={ctxValue}>
       <Header
-        cart={shoppingCart}
-        onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
       />
       {/* 
       We moved the code below from the Shop component, therefore we use it as a wrapper now and no longer with self-closing tag.
@@ -95,7 +94,7 @@ function App() {
       <Shop onAddItemToCart={handleAddItemToCart}>
         {DUMMY_PRODUCTS.map((product) => (
           <li key={product.id}>
-            <Product {...product} onAddToCart={handleAddItemToCart} />
+            <Product {...product} />
           </li>
         ))}
       </Shop>

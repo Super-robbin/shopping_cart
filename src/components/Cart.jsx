@@ -11,7 +11,7 @@ import { CartContext } from "../store/shopping-cart-context";
 // And here I'll set the value prop to an object that also has such an empty items array.
 // So we do need to set that value prop and also provide our context value here.
 
-export default function Cart({ onUpdateItemQuantity }) {
+export default function Cart() {
   // return (
   // The Consumer component can be used to wrap JSX code that should have access to a context value with it.
   // This component needs a special kind of child, a function that is executed by React under the hood and automatically receive,
@@ -90,11 +90,11 @@ export default function Cart({ onUpdateItemQuantity }) {
                   <span> ({formattedPrice})</span>
                 </div>
                 <div className="cart-item-actions">
-                  <button onClick={() => onUpdateItemQuantity(item.id, -1)}>
+                  <button onClick={() => cartCtx.updateItemQuantity(item.id, -1)}>
                     -
                   </button>
                   <span>{item.quantity}</span>
-                  <button onClick={() => onUpdateItemQuantity(item.id, 1)}>
+                  <button onClick={() => cartCtx.updateItemQuantity(item.id, 1)}>
                     +
                   </button>
                 </div>
